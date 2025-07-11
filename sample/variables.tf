@@ -30,6 +30,11 @@ variable "agents" {
       lambda_arn                 = string
       api_schema                 = string
     })))
+    knowledge_bases = optional(list(object({
+      description          = string
+      knowledge_base_id    = string
+      knowledge_base_state = string
+    })))
     guardrail_configuration = optional(list(object({
       guardrail_identifier = string
       guardrail_version    = string
@@ -81,4 +86,9 @@ variable "aws_region" {
 
 variable "profile" {
   description = "Profile AWS"
+}
+
+variable "aws_role_arn" {
+  description = "AWS role ARN for cli execution"
+  type        = string
 }

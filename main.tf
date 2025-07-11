@@ -89,6 +89,19 @@ resource "aws_bedrockagent_agent_action_group" "action_groups" {
   }
 }
 
+resource "aws_bedrockagent_agent_knowledge_base_association" "knowledge_base_associations" {
+  provider   = aws.project
+  depends_on = [aws_bedrockagent_agent_action_group.action_groups]
+  for_each = tomap({
+    for knowledge_base in local.knowledge_bases : "${knowledge_base.knowledge_base_id}" => knowledge_base
+  })
+
+  agent_id             = each.value.agent_id
+  description          = each.value.description
+  knowledge_base_id    = each.value.knowledge_base_id
+  knowledge_base_state = each.value.knowledge_base_state
+}
+
 resource "null_resource" "prepare" {
   depends_on = [aws_bedrockagent_agent_action_group.action_groups]
 
@@ -102,8 +115,34 @@ resource "null_resource" "prepare" {
   }
 
   provisioner "local-exec" {
-    command     = "aws bedrock-agent prepare-agent --agent-id ${aws_bedrockagent_agent.agents[each.key].agent_id} --profile ${var.environment}"
-    interpreter = ["PowerShell", "-Command"]
+    command = <<EOF
+      #aws_role=${var.aws_role_arn}
+
+      if [ -z "${var.aws_role_arn}" ]; then
+          #Be sure to set AWS_PROFILE and AWS_DEFAULT_REGION variables
+          #export AWS_PROFILE=dev
+          #export AWS_DEFAULT_REGION=us-east-1
+
+          echo "aws_role is empty, using profile AWS_PROFILE"
+          aws bedrock-agent prepare-agent --agent-id ${aws_bedrockagent_agent.agents[each.key].agent_id}
+      else
+          echo "aws_role is set to '$aws_role'"
+          set -e
+          CREDENTIALS=(`aws sts assume-role \
+          --role-arn ${var.aws_role_arn} \
+          --role-session-name "bedrock-cli" \
+          --query "[Credentials.AccessKeyId,Credentials.SecretAccessKey,Credentials.SessionToken]" \
+          --output text`)
+
+          unset AWS_PROFILE
+          export AWS_DEFAULT_REGION=${var.aws_region}
+          export AWS_ACCESS_KEY_ID="$${CREDENTIALS[0]}"
+          export AWS_SECRET_ACCESS_KEY="$${CREDENTIALS[1]}"
+          export AWS_SESSION_TOKEN="$${CREDENTIALS[2]}"
+
+          aws bedrock-agent prepare-agent --agent-id ${aws_bedrockagent_agent.agents[each.key].agent_id}
+      fi
+    EOF
   }
 }
 

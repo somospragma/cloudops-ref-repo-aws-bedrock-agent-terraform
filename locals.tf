@@ -46,4 +46,17 @@ locals {
     ]
   ])
 
+  knowledge_bases = flatten([
+    for agent_key, agent in var.agents : [
+      for knowledge_base_key, knowledge_base in tomap({
+        for knowledge_base in agent.knowledge_bases : knowledge_base.knowledge_base_id => knowledge_base
+        }) : {
+        description          = knowledge_base.description
+        agent_id             = aws_bedrockagent_agent.agents[agent_key].agent_id
+        knowledge_base_id    = knowledge_base.knowledge_base_id
+        knowledge_base_state = knowledge_base.knowledge_base_state
+      }
+    ]
+  ])
+
 }

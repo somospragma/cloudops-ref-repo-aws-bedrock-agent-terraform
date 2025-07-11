@@ -40,6 +40,11 @@ variable "agents" {
       lambda_arn                 = string
       api_schema                 = string
     })))
+    knowledge_bases = optional(list(object({
+      description          = string
+      knowledge_base_id    = string
+      knowledge_base_state = string
+    })))
     guardrail_configuration = optional(list(object({
       guardrail_identifier = string
       guardrail_version    = string
@@ -82,3 +87,13 @@ variable "environment" {
     error_message = "El entorno debe ser uno de: dev, qa, pdn."
   }
 }
+
+variable "aws_role_arn" {
+  description = "AWS role ARN for cli execution"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "AWS region for cli execution"
+  type        = string
+} 
