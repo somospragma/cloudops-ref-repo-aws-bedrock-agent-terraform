@@ -91,15 +91,25 @@ resource "aws_bedrockagent_agent_action_group" "action_groups" {
 
 resource "aws_bedrockagent_agent_knowledge_base_association" "knowledge_base_associations" {
   provider   = aws.project
-  depends_on = [aws_bedrockagent_agent_action_group.action_groups]
-  for_each = tomap({
-    for knowledge_base in local.knowledge_bases : "${knowledge_base.knowledge_base_id}" => knowledge_base
-  })
+  depends_on = [aws_bedrockagent_agent.agents, aws_bedrockagent_agent_action_group.action_groups]
+  
+  #Solution: for_each error with static keys using flatten
+  for_each = {
+    for item in flatten([
+      for agent_key, agent in var.agents : [
+        for kb_idx, kb in (agent.knowledge_bases != null ? agent.knowledge_bases : []) : {
+          key       = "${agent_key}-kb-${kb_idx}"
+          agent_key = agent_key
+          kb_config = kb
+        }
+      ]
+    ]) : item.key => item
+  }
 
-  agent_id             = each.value.agent_id
-  description          = each.value.description
-  knowledge_base_id    = each.value.knowledge_base_id
-  knowledge_base_state = each.value.knowledge_base_state
+  agent_id             = aws_bedrockagent_agent.agents[each.value.agent_key].agent_id
+  description          = each.value.kb_config.description
+  knowledge_base_id    = each.value.kb_config.knowledge_base_id
+  knowledge_base_state = each.value.kb_config.knowledge_base_state
 }
 
 resource "null_resource" "prepare" {
