@@ -12,7 +12,7 @@ resource "aws_bedrockagent_agent" "agents" {
   agent_resource_role_arn     = each.value.agent_resource_role_arn
   idle_session_ttl_in_seconds = each.value.idle_session_ttl_in_seconds
   foundation_model            = each.value.foundation_model
-  instruction                 = file(each.value.instruction)
+  instruction                 = each.value.instruction
   customer_encryption_key_arn = each.value.customer_encryption_key_arn
   prepare_agent               = each.value.prepare_agent
   description                 = each.value.description
@@ -24,7 +24,7 @@ resource "aws_bedrockagent_agent" "agents" {
       dynamic "prompt_configurations" {
         for_each = each.value.prompt_override_configuration
         content {
-          base_prompt_template = file(prompt_configurations.value.template)
+          base_prompt_template = prompt_configurations.value.template
           parser_mode          = prompt_configurations.value.parser_mode
           prompt_creation_mode = prompt_configurations.value.prompt_creation_mode
           prompt_state         = prompt_configurations.value.prompt_state
@@ -85,7 +85,7 @@ resource "aws_bedrockagent_agent_action_group" "action_groups" {
     lambda = each.value.lambda_arn
   }
   api_schema {
-    payload = file(each.value.api_schema)
+    payload = each.value.api_schema
   }
 }
 

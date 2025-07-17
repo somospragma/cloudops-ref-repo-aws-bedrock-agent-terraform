@@ -58,7 +58,7 @@ variable "agents" {
 
   validation {
     condition = alltrue([
-      for k, v in var.agents : length(v.instruction) >= 10 && length(v.instruction) <= 128
+      for k, v in var.agents : length(v.instruction) <= 0
     ])
     error_message = "Agent type must be have instruction"
   }
