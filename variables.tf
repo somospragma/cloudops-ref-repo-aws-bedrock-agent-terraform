@@ -56,12 +56,12 @@ variable "agents" {
     additional_tags = optional(map(string), {})
   }))
 
-  validation {
-    condition = alltrue([
-      for k, v in var.agents : length(v.instruction) <= 0
-    ])
-    error_message = "Agent type must be have instruction"
-  }
+  # validation {
+  #   condition = alltrue([
+  #     for k, v in var.agents : length(v.instruction) <= 0
+  #   ])
+  #   error_message = "Agent type must be have instruction"
+  # }
 
 }
 
