@@ -83,8 +83,8 @@ variable "environment" {
   description = "Environment name for resource naming and tagging"
   type        = string
   validation {
-    condition     = contains(["dev", "qa", "pdn"], var.environment)
-    error_message = "El entorno debe ser uno de: dev, qa, pdn."
+    condition     = contains(["dev", "qa", "pdn", "prod"], var.environment)
+    error_message = "El entorno debe ser uno de: dev, qa, pdn, prod."
   }
 }
 
