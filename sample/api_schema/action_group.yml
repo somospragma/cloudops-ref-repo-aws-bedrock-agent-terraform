@@ -1,0 +1,716 @@
+openapi: 3.0.0
+info:
+  title: action_groups
+  version: '1.0'
+paths:
+  /enableroutes:
+    get:
+      summary: query enable routes of technical knowledge
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesResponse'
+      operationId: getenableroutes
+      description: End point to query all enable routes
+    parameters: []
+  '/enableroutes/{routeEnableId}':
+    parameters:
+      - schema:
+          type: string
+        name: routeEnableId
+        in: path
+        required: true
+        description: unique identifier of a knowledge enable route
+    get:
+      summary: Get Enable route of technical knowledge by ID
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesByIDResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesByIDResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesByIDResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesByIDResponse'
+      operationId: getenableroutesrouteEnableId
+      description: Endpont to get evables routes by id
+  /enableroutes/progress/tasks:
+    post:
+      summary: add completed tasks to an enable route
+      operationId: postenableroutesprogresstasks
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesProgressTasksPostResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesProgressTasksPostResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesProgressPostResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesProgressTasksPostResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/EnableRoutesProgressTasksPostRequest'
+      description: Endpoint to manage complete task of an activity of progress student
+  '/enableroutes/progress/{student}':
+    parameters:
+      - schema:
+          type: string
+        name: student
+        in: path
+        required: true
+        description: student email identifier
+    post:
+      summary: create progress of student with enable route and assigned activities
+      operationId: postenableroutesprogress
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesProgressPostResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesProgressPostResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesProgressPostResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesProgressPostResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/EnableRoutesProgressPostRequest'
+      description: Endnpoint for add progressroute for a student
+      tags:
+        - enable-routes
+    patch:
+      summary: update progress of student with enable route and assigned activities
+      operationId: patchenableroutesprogress
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesProgressPatchResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/EnableRoutesProgressPatchRequest'
+      description: Endpoint for update progress status
+    get:
+      summary: enableroutes-progress-student
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesProgressGetResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesProgressGetResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesProgressGetResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesProgressGetResponse'
+      operationId: getenableroutesprogressstrudent
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - 'true'
+              - 'false'
+              - all
+          in: query
+          name: status
+          description: filter progress
+      description: Endpoint to manage create update or query enable route progress of a student
+  '/enableroutes/evaluations/{email}':
+    description: manage evaluations of a student
+    parameters:
+      - schema:
+          type: string
+        name: email
+        in: path
+        description: student mail
+        required: true
+    post:
+      summary: create an student evaluation
+      operationId: postenableroutesevaluationsemail
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPostResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPostResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPostResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPostResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/EnableRoutesEvaluationsPostRequest'
+      description: 'Endpoint to manage create or update student evaluations '
+    patch:
+      summary: update the status of an student evaluation
+      operationId: patchenableroutesevaluationsemail
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPatchResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPatchResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPatchResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesEvaluationsPatchResponse'
+      requestBody:
+        $ref: '#/components/requestBodies/EnableRoutesEvaluationsPatchRequest'
+      description: Endpoint for update an evaluation state
+  /enableroutes/evaluations:
+    get:
+      summary: query evaluations of a student
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesEvaluationsByChapterResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesEvaluationsByChapterResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesEvaluationsByChapterResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesEvaluationsByChapterResponse'
+      operationId: getenableroutesevaluations
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: chapter
+          description: feedback chapter filter
+        - schema:
+            type: string
+            enum:
+              - unassigned
+              - pending
+              - finished
+          in: query
+          name: status
+          description: state filter
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: tutor
+          description: tutor filter
+        - schema:
+            type: string
+          in: query
+          name: evaluationId
+          description: evaluation Id
+        - schema:
+            type: string
+          in: query
+          name: tokenId
+          description: token user prompt
+      description: 'Endpoint to query evaluations by status and by chapter or tutormail, status is required '
+      requestBody:
+        content: {}
+  '/enableroutes/evaluations/iaeva/{email}':
+    get:
+      summary: IA EVA get results of a student
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/EnableRoutesEvaluationsIAEVAGetResponse'
+        '400':
+          $ref: '#/components/responses/EnableRoutesEvaluationsIAEVAGetResponse'
+        '404':
+          $ref: '#/components/responses/EnableRoutesEvaluationsIAEVAGetResponse'
+        '500':
+          $ref: '#/components/responses/EnableRoutesEvaluationsIAEVAGetResponse'
+      operationId: getenableroutesevaluationsiaeva
+      description: Endpoint to query iaeva results
+    parameters:
+      - schema:
+          type: string
+        name: email
+        in: path
+        required: true
+        description: parameter for student email
+components:
+  responses:
+    EnableRoutesResponse:
+      description: Response for query enable routes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+              data:
+                type: object
+                nullable: true
+                properties:
+                  enableRoutes:
+                    $ref: '#/components/schemas/EnableRoute'
+                required:
+                  - enableRoutes
+        application/xml:
+          schema:
+            type: object
+            properties: {}
+    EnableRoutesByIDResponse:
+      description: Response for query enable route by Id
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+              data:
+                $ref: '#/components/schemas/EnableRoute'
+    EnableRulesDeleteResponse:
+      description: Response for delete enable route
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+              data:
+                type: object
+                properties:
+                  message:
+                    type: string
+    EnableRoutesPostResponse:
+      description: Response for create enable route
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+              errorCode:
+                type: string
+              data:
+                type: object
+                nullable: true
+                properties:
+                  message:
+                    type: string
+    EnableRoutesProgressPostResponse:
+      description: Response for create progress for enable route
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+              errorCode:
+                type: string
+              data:
+                type: object
+                properties:
+                  message:
+                    type: string
+    EnableRoutesProgressTasksPostResponse:
+      description: Response for create progress task for enable route
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+              errorCode:
+                type: string
+              data:
+                type: object
+                properties:
+                  message:
+                    type: string
+    EnableRoutesProgressHistoricGetResponse:
+      description: Response for query historic
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+              errorCode:
+                type: string
+              data:
+                type: object
+                nullable: true
+                properties:
+                  progressHistoric:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Progress'
+    EnableRoutesProgressGetResponse:
+      description: Response fro query progress routes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+              errorCode:
+                type: string
+              data:
+                type: object
+                properties:
+                  progress:
+                    $ref: '#/components/schemas/Progress'
+    EnableRoutesMailServiceFeedbackPostResponse:
+      description: Response for mail service feedback request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: integer
+              data:
+                type: object
+                nullable: true
+                properties:
+                  message:
+                    type: string
+    EnableRoutesEvaluationsByChapterResponse:
+      description: Response for Query evaluations by chapter
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+              data:
+                type: object
+                properties:
+                  evaluations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Evaluation'
+    EnableRoutesEvaluationsPostResponse:
+      description: Response for evaluation creation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: integer
+              data:
+                type: object
+                nullable: true
+                properties:
+                  message:
+                    type: string
+    EnableRoutesEvaluationsPatchResponse:
+      description: Response for evaluation update
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: integer
+              data:
+                type: object
+                nullable: true
+                properties:
+                  message:
+                    type: string
+    EnableRoutesEvaluationsIAEVAGetResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              date:
+                type: string
+              affinity:
+                type: integer
+                nullable: true
+              url:
+                type: string
+                nullable: true
+              skills:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    skill:
+                      type: string
+                    score:
+                      type: integer
+    EnableRoutesProgressPatchResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              statusCode:
+                type: integer
+              errorCode:
+                type: string
+              data:
+                type: object
+                properties:
+                  message:
+                    type: string
+  requestBodies:
+    EnableRoutesProgressPostRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              progress:
+                $ref: '#/components/schemas/Progress'
+    EnableRoutesProgressTasksPostRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              student:
+                type: string
+                format: email
+              enableRouteId:
+                type: string
+              tasks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    EnableRoutesMailServiceFeedbackPostRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              enableRouteId:
+                type: string
+              studentName:
+                type: string
+    EnableRoutesEvaluationsPostRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              evaluation:
+                $ref: '#/components/schemas/Evaluation'
+    EnableRoutesEvaluationsPatchRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              evaluationId:
+                type: string
+              status:
+                type: string
+                enum:
+                  - unassigned
+                  - pending
+                  - finished
+    EnableRoutesProgressPatchRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              activityId:
+                type: string
+              enableRouteId:
+                type: string
+              status:
+                type: string
+  schemas:
+    Activity:
+      title: Activities
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        order:
+          type: string
+        technology:
+          type: string
+        description:
+          type: string
+        context:
+          $ref: '#/components/schemas/AppliedKnowledge'
+        backlog:
+          $ref: '#/components/schemas/AppliedKnowledge'
+        architecture:
+          $ref: '#/components/schemas/AppliedKnowledge'
+        archetype:
+          $ref: '#/components/schemas/AppliedKnowledge'
+        gaps:
+          $ref: '#/components/schemas/Gap'
+    ActivityProgress:
+      title: ActivityProgress
+      type: object
+      properties:
+        activity:
+          $ref: '#/components/schemas/Activity'
+        status:
+          type: string
+          enum:
+            - pending
+            - done
+            - feedback
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    AppliedKnowledge:
+      title: AppliedKnowledge
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        URL:
+          type: string
+          format: uri
+    EnableRoute:
+      title: EnableRoutes
+      type: object
+      properties:
+        chapter:
+          type: string
+        speciality:
+          type: string
+        technology:
+          type: string
+        description:
+          type: string
+        executionType:
+          type: string
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+        id:
+          type: string
+        tutors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tutor'
+    Evaluation:
+      title: Evaluation
+      type: object
+      properties:
+        id:
+          type: string
+        emailTutor:
+          type: string
+        emailStudent:
+          type: string
+        type:
+          type: string
+          enum:
+            - tracking
+            - closure
+            - evaluation
+        chapter:
+          type: string
+        status:
+          type: string
+          enum:
+            - unassigned
+            - pending
+            - finished
+        studentName:
+          type: string
+        progress:
+          $ref: '#/components/schemas/Progress'
+        description:
+          type: string
+        hubspot-id:
+          type: string
+        feedback:
+          type: string
+    Gap:
+      title: Gaps
+      type: object
+      properties:
+        description:
+          type: string
+    Progress:
+      title: Progress
+      type: object
+      properties:
+        id:
+          type: string
+        enableRoute:
+          $ref: '#/components/schemas/EnableRoute'
+        isActive:
+          type: boolean
+        student:
+          type: string
+          format: email
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityProgress'
+    Task:
+      title: Task
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          default: closed
+          enum:
+            - closed
+            - open
+        endDate:
+          type: string
+          format: date-time
+    Tutor:
+      title: Tutor
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
